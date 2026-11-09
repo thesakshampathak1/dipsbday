@@ -18,6 +18,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageGreeting = "Happy Birthday,"; // Customizable Greeting
     document.querySelector('.recipient-name').textContent = `${recipientName}!`;
 
+    // Load the uploaded portraits from the repository. Keep the artwork placeholders
+    // until each photo has loaded so a failed request never leaves an empty frame.
+    document.querySelectorAll('.birthday-photo[data-photo-slot]').forEach(photo => {
+        const fileName = photo.dataset.photoSlot === 'left' ? 'pic 1.jpg' : 'pic 2.jpg';
+        const placeholder = photo.closest('.photo-frame')?.querySelector('.photo-placeholder');
+        photo.style.display = 'none';
+        photo.addEventListener('load', () => {
+            if (placeholder) placeholder.remove();
+            photo.hidden = false;
+            photo.style.display = 'block';
+        }, { once: true });
+        photo.src = encodeURI(fileName);
+    });
+
     // --- Utility Function to Transition Steps ---
     function transitionToStep(targetStepId) {
         const currentActive = document.querySelector('.step.active');
