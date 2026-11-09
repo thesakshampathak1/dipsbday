@@ -12,33 +12,37 @@
         <source src="birthday_song.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
+    <button id="musicToggle" class="music-toggle" type="button" aria-pressed="false" aria-label="Pause birthday music" hidden>♫ Music on</button>
 
     <div class="step active" id="step1">
+        <div class="ambient-scene" aria-hidden="true"><i class="ambient-orb orb-one"></i><i class="ambient-orb orb-two"></i><i class="ambient-orb orb-three"></i><i class="ambient-star star-one">✦</i><i class="ambient-star star-two">✧</i><i class="ambient-star star-three">✦</i><i class="ambient-star star-four">✧</i></div>
         <div class="welcome-card">
             <h1 class="welcome-title">You've got a surprise!</h1>
-            <p class="welcome-message">Click below to start your birthday journey...</p>
-            <button id="startButton" class="action-button">Start the Celebration!</button>
+            <p class="welcome-message">Something lovely is waiting for you...</p>
+            <button id="startButton" class="action-button">Open your surprise</button>
         </div>
     </div>
 
     <div class="step" id="step2">
-        <div class="envelope-container" id="envelopeContainer">
+        <div class="ambient-scene" aria-hidden="true"><i class="ambient-orb orb-one"></i><i class="ambient-orb orb-two"></i><i class="ambient-orb orb-three"></i><i class="ambient-star star-one">✦</i><i class="ambient-star star-two">✧</i><i class="ambient-star star-three">✦</i><i class="ambient-star star-four">✧</i></div>
+        <div class="envelope-container" id="envelopeContainer" role="button" tabindex="0" aria-label="Open the envelope">
             <div class="envelope">
                 <div class="envelope-back"></div>
                 <div class="envelope-front"></div>
                 <div class="envelope-flap"></div>
-                <div class="envelope-seal"></div>
+                <div class="envelope-seal" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09A6.02 6.02 0 0 1 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35Z"/></svg></div>
             </div>
-            <p class="click-instruction">Click the envelope!</p>
+            <p class="click-instruction">Open the envelope</p>
         </div>
     </div>
 
     <div class="step" id="step3">
+        <div class="ambient-scene" aria-hidden="true"><i class="ambient-orb orb-one"></i><i class="ambient-orb orb-two"></i><i class="ambient-orb orb-three"></i><i class="ambient-star star-one">✦</i><i class="ambient-star star-two">✧</i><i class="ambient-star star-three">✦</i><i class="ambient-star star-four">✧</i></div>
         <div class="letter-container" id="letterContainer">
             <div class="letter">
-                <p>Dearest [Name],</p>
-                <p>This message carries wishes straight from the heart, ready to unfold into a memorable celebration just for you.</p>
-                <p>Click the button to reveal your special birthday surprise!</p>
+                <p id="letterGreeting">Dearest Deepi ,</p>
+                <p>A little note, wrapped with love and ready to unfold into something wonderful, just for you.</p>
+                <p>Tap below when you're ready to see what's inside!</p>
                 <button id="unfoldButton" class="action-button">Unfold My Surprise!</button>
             </div>
         </div>
@@ -49,28 +53,42 @@
             <div class="fireworks-container"></div>
             <div class="confetti-cannon-container"></div>
             <div class="balloons-container"></div>
+            <div class="sparkles-container" aria-hidden="true"></div>
 
-            <div class="celebration-card">
-                <p class="sub-greeting">To the amazing</p>
-                <h1 class="main-greeting typewriter-text" id="finalGreeting">Happy Birthday,</h1>
-                <h2 class="recipient-name">Sapthesh!</h2>
-                <div class="cake-container">
-                    <div class="cake">
-                        <div class="plate"></div>
-                        <div class="layer layer-bottom"></div>
-                        <div class="layer layer-middle"></div>
-                        <div class="layer layer-top"></div>
-                        <div class="icing"></div>
-                        <div class="drip drip1"></div>
-                        <div class="drip drip2"></div>
-                        <div class="drip drip3"></div>
-                        <div class="candle">
-                            <div class="flame" id="candleFlame"></div>
+            <div class="celebration-stage">
+                <figure class="photo-frame photo-frame-left" aria-label="Photo of the birthday girl, left frame">
+                    <div class="photo-placeholder"><span>✿</span><strong>Your photo goes here</strong><small>Add the left portrait when ready</small></div>
+                    <img class="birthday-photo" data-photo-slot="left" alt="Birthday girl, left portrait" hidden>
+                    <figcaption>Birthday beauty</figcaption>
+                </figure>
+
+                <div class="celebration-card">
+                    <p class="sub-greeting">To the amazing</p>
+                    <h1 class="main-greeting typewriter-text" id="finalGreeting">Happy Birthday,</h1>
+                    <h2 class="recipient-name">Deepika!</h2>
+                    <div class="cake-container">
+                        <div class="cake">
+                            <div class="plate"></div>
+                            <div class="layer layer-bottom"></div>
+                            <div class="layer layer-middle"></div>
+                            <div class="layer layer-top"></div>
+                            <div class="icing"></div>
+                            <div class="drip drip1"></div>
+                            <div class="drip drip2"></div>
+                            <div class="drip drip3"></div>
+                            <button class="candle" id="candleButton" type="button" aria-label="Blow out the candle">
+                                <div class="flame" id="candleFlame"></div>
+                            </button>
                         </div>
                     </div>
+                    <p class="final-wish">May your special day be filled with immense joy, laughter, and all the wonderful things life has to offer. Here's to another year of amazing adventures!</p>
+                    <p class="signature">With love and best wishes <span class="heart-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09A6.02 6.02 0 0 1 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35Z"/></svg></span></p>
                 </div>
-                <p class="final-wish">May your special day be filled with immense joy, laughter, and all the wonderful things life has to offer. Here's to another year of amazing adventures!</p>
-                <p class="signature">With love and best wishes <span class="heart-icon"></span></p>
+                <figure class="photo-frame photo-frame-right" aria-label="Photo of the birthday girl, right frame">
+                    <div class="photo-placeholder"><span>♡</span><strong>Your photo goes here</strong><small>Add the right portrait when ready</small></div>
+                    <img class="birthday-photo" data-photo-slot="right" alt="Birthday girl, right portrait" hidden>
+                    <figcaption>Made of magic</figcaption>
+                </figure>
             </div>
         </div>
     </div>

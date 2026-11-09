@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const envelopeContainer = document.getElementById('envelopeContainer');
     const unfoldButton = document.getElementById('unfoldButton');
     const finalGreetingElement = document.getElementById('finalGreeting');
+    const musicToggle = document.getElementById('musicToggle');
+    const candleButton = document.getElementById('candleButton');
 
     const steps = {
         step1: document.getElementById('step1'),
@@ -12,38 +14,82 @@ document.addEventListener('DOMContentLoaded', () => {
         step4: document.getElementById('step4'),
     };
 
-    const recipientName = "Sapthesh"; // Customizable Name
+    const recipientName = "Deepi"; // Birthday recipient's preferred name
     const messageGreeting = "Happy Birthday,"; // Customizable Greeting
+    document.querySelector('.recipient-name').textContent = `${recipientName}!`;
 
     // --- Utility Function to Transition Steps ---
     function transitionToStep(targetStepId) {
         const currentActive = document.querySelector('.step.active');
+        const nextStep = steps[targetStepId];
+        if (currentActive === nextStep) return;
         if (currentActive) {
             currentActive.classList.remove('active');
+            currentActive.classList.add('leaving');
+            window.setTimeout(() => currentActive.classList.remove('leaving'), 700);
         }
-        steps[targetStepId].classList.add('active');
+        nextStep.classList.remove('leaving');
+        nextStep.classList.add('active');
     }
 
     // --- Step 1: Welcome Screen Interactions ---
     startButton.addEventListener('click', () => {
+        startBirthdayMusic();
         transitionToStep('step2');
-        // Autoplay music (often requires user interaction first)
-        backgroundMusic.play().catch(error => {
+    });
+
+    function startBirthdayMusic() {
+        musicToggle.hidden = false;
+        backgroundMusic.play().then(() => {
+            musicToggle.setAttribute('aria-pressed', 'true');
+            musicToggle.textContent = '♫ Music on';
+        }).catch(error => {
             console.log("Autoplay prevented:", error);
-            // Optionally, show a play button if autoplay fails
+            musicToggle.setAttribute('aria-pressed', 'false');
+            musicToggle.setAttribute('aria-label', 'Play birthday music');
+            musicToggle.textContent = '♫ Music off';
         });
+    }
+
+    musicToggle.addEventListener('click', () => {
+        if (backgroundMusic.paused) {
+            backgroundMusic.play().then(() => {
+                musicToggle.setAttribute('aria-pressed', 'true');
+                musicToggle.textContent = '♫ Music on';
+                musicToggle.setAttribute('aria-label', 'Pause birthday music');
+            }).catch(() => {
+                musicToggle.textContent = '♫ Try music again';
+            });
+        } else {
+            backgroundMusic.pause();
+            musicToggle.setAttribute('aria-pressed', 'false');
+            musicToggle.textContent = '♫ Music off';
+            musicToggle.setAttribute('aria-label', 'Play birthday music');
+        }
     });
 
     // --- Step 2: Envelope Interactions ---
-    envelopeContainer.addEventListener('click', () => {
+    function openEnvelope() {
+        if (envelopeContainer.classList.contains('open')) return;
         envelopeContainer.classList.add('open');
         envelopeContainer.querySelector('.click-instruction').style.opacity = '0'; // Hide instruction
-        setTimeout(() => {
+        window.setTimeout(() => {
             transitionToStep('step3');
-            setTimeout(() => {
-                document.getElementById('letterContainer').classList.add('show');
-            }, 100); // Small delay for letter reveal animation
-        }, 700); // Duration matches envelope flap animation
+            window.setTimeout(() => document.getElementById('letterContainer').classList.add('show'), 40);
+        }, 900); // Let the full flap animation finish before crossfading to the letter.
+    }
+    envelopeContainer.addEventListener('click', openEnvelope);
+    envelopeContainer.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openEnvelope();
+        }
+    });
+
+    candleButton.addEventListener('click', () => {
+        candleButton.classList.add('blown-out');
+        candleButton.setAttribute('aria-label', 'Candle blown out');
+        createConfettiCannon(45, 0.25);
     });
 
     // --- Step 3: Letter Unfold Interactions ---
@@ -75,7 +121,22 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => createConfettiCannon(60, 0.2), 1000); // Third burst
 
         // --- Rising Balloons ---
-        createBalloons(15);
+        createBalloons(22);
+        // Keep fresh balloons and fireworks rising while the celebration is open.
+        window.setInterval(() => createBalloons(5), 4200);
+        window.setInterval(() => createFireworks(2), 3200);
+
+        // Soft, twinkling lights behind the card.
+        const sparklesContainer = document.querySelector('.sparkles-container');
+        for (let i = 0; i < 28; i++) {
+            const sparkle = document.createElement('span');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = `${Math.random() * 100}%`;
+            sparkle.style.top = `${Math.random() * 100}%`;
+            sparkle.style.setProperty('--twinkle-delay', `${Math.random() * 4}s`);
+            sparkle.style.setProperty('--twinkle-duration', `${2 + Math.random() * 3}s`);
+            sparklesContainer.appendChild(sparkle);
+        }
 
         // --- Background Fireworks (Subtle) ---
         createFireworks(5); // Number of firework bursts
@@ -84,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Confetti Cannon Helper ---
     function createConfettiCannon(count, delayMultiplier) {
         const confettiCannonContainer = document.querySelector('.confetti-cannon-container');
-        const colors = ['var(--primary-red)', 'var(--accent-yellow)', 'var(--text-light)', '#00d8d6', '#8e44ad']; // Use CSS variables
+        const colors = ['var(--primary-red)', 'var(--accent-yellow)', '#fff8ee', '#c79ab5', '#d9cbea'];
 
         for (let i = 0; i < count; i++) {
             const confetti = document.createElement('div');
@@ -119,16 +180,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Balloons Helper ---
     function createBalloons(count) {
         const balloonsContainer = document.querySelector('.balloons-container');
-        const colors = ['var(--primary-red)', 'var(--accent-yellow)', '#00d8d6', '#8e44ad', '#3498db'];
+        const colors = ['var(--primary-red)', 'var(--accent-yellow)', '#d9cbea', '#eab8c7', '#f4dfca'];
 
         for (let i = 0; i < count; i++) {
             const balloon = document.createElement('div');
             balloon.classList.add('balloon');
 
-            balloon.style.left = `${Math.random() * 80 + 10}vw`; // Avoid edges
+            const edge = Math.random() < 0.5;
+            balloon.style.left = edge
+                ? `${Math.random() * 24}vw`
+                : `${76 + Math.random() * 24}vw`;
             balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            balloon.style.animationDuration = `${Math.random() * 6 + 10}s`; // 10-16s duration
-            balloon.style.animationDelay = `${Math.random() * 5}s`; // Staggered start
+            balloon.style.setProperty('--balloon-size', `${Math.random() * 22 + 54}px`);
+            balloon.style.animationDuration = `${Math.random() * 4 + 11}s`; // 11-15s duration
+            balloon.style.animationDelay = `${Math.random() * 1.8}s`; // Quick, gentle stagger
 
             balloonsContainer.appendChild(balloon);
 
@@ -140,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Fireworks Helper ---
     function createFireworks(count) {
         const fireworksContainer = document.querySelector('.fireworks-container');
-        const colors = ['var(--primary-red)', 'var(--accent-yellow)', 'var(--text-light)', '#00d8d6'];
+        const colors = ['var(--primary-red)', 'var(--accent-yellow)', '#fff8ee', '#c79ab5'];
 
         for (let i = 0; i < count; i++) {
             const firework = document.createElement('div');
